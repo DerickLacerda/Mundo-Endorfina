@@ -1,9 +1,35 @@
+"use client"
+
+import { useEffect } from "react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { Trophy, LogIn, UserPlus } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { useAuth } from "@/contexts/auth-context"
 
-export default function Home() {
+export function WelcomeClient() {
+  const { user, isLoading } = useAuth()
+  const router = useRouter()
+
+  useEffect(() => {
+    if (!isLoading && user) {
+      router.push("/dashboard")
+    }
+  }, [user, isLoading, router])
+
+  // Se estiver carregando ou o usuário estiver logado, não mostra nada ainda
+  if (isLoading || user) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-pulse-slow text-center">
+          <h2 className="text-2xl font-bold">Carregando...</h2>
+          <p className="text-muted-foreground">Aguarde um momento</p>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-muted/40 p-4">
       <div className="w-full max-w-4xl">

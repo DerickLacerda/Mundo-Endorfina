@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { Trophy, ArrowLeft } from "lucide-react"
@@ -13,28 +13,42 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { toast } from "sonner"
 import { useAuth } from "@/contexts/auth-context"
 
-export default function LoginPage() {
+export default function RegisterPage() {
   const router = useRouter()
-  const { login } = useAuth()
+  const { register, user, isLoading } = useAuth()
+  const [name, setName] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const [confirmPassword, setConfirmPassword] = useState("")
   const [loading, setLoading] = useState(false)
 
-  const handleLogin = async (e: React.FormEvent) => {
+  useEffect(() => {
+    if (!isLoading && user) {
+      router.push("/")
+    }
+  }, [user, isLoading, router])
+
+  const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
 
+    if (password !== confirmPassword) {
+      toast.error("As senhas não coincidem")
+      setLoading(false)
+      return
+    }
+
     try {
-      const success = await login(email, password)
+      const success = await register(name, email, password)
       if (success) {
-        toast.success("Login realizado com sucesso!")
-        router.push("/dashboard") // Isso vai para app/(authenticated)/dashboard/page.tsx
+        toast.success("Conta criada com sucesso!")
+        router.push("/")
       } else {
-        toast.error("Email ou senha incorretos")
+        toast.error("Erro ao criar conta")
         setLoading(false)
       }
     } catch (error) {
-      toast.error("Erro ao fazer login")
+      toast.error("Erro ao criar conta")
       setLoading(false)
     }
   }
@@ -46,13 +60,23 @@ export default function LoginPage() {
           <div className="h-12 w-12 rounded-full bg-primary flex items-center justify-center mb-4">
             <Trophy className="h-6 w-6 text-primary-foreground" />
           </div>
-          <CardTitle className="text-2xl text-center">Entrar no Mundo Endorfina</CardTitle>
+          <CardTitle className="text-2xl text-center">Criar Conta</CardTitle>
           <CardDescription className="text-center">
-            Entre com suas credenciais para acessar a plataforma
+            Preencha os dados abaixo para criar sua conta no Mundo Endorfina
           </CardDescription>
         </CardHeader>
-        <form onSubmit={handleLogin}>
+        <form onSubmit={handleRegister}>
           <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="name">Nome completo</Label>
+              <Input
+                id="name"
+                placeholder="Seu nome completo"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+              />
+            </div>
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input
@@ -65,12 +89,7 @@ export default function LoginPage() {
               />
             </div>
             <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <Label htmlFor="password">Senha</Label>
-                <Link href="#" className="text-xs text-primary hover:underline">
-                  Esqueceu a senha?
-                </Link>
-              </div>
+              <Label htmlFor="password">Senha</Label>
               <Input
                 id="password"
                 type="password"
@@ -80,31 +99,31 @@ export default function LoginPage() {
                 required
               />
             </div>
-            <div className="border rounded-md p-3 bg-card">
-              <p className="text-sm font-medium">Contas para teste:</p>
-              <div className="mt-2 space-y-1 text-xs">
-                <p>
-                  <strong>Usuário:</strong> joao@exemplo.com / <strong>Senha:</strong> 123456
-                </p>
-                <p>
-                  <strong>Admin:</strong> admin@exemplo.com / <strong>Senha:</strong> admin123
-                </p>
-              </div>
+            <div className="space-y-2">
+              <Label htmlFor="confirmPassword">Confirmar senha</Label>
+              <Input
+                id="confirmPassword"
+                type="password"
+                placeholder="••••••••"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                required
+              />
             </div>
           </CardContent>
           <CardFooter className="flex flex-col space-y-4">
             <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? "Entrando..." : "Entrar"}
+              {loading ? "Criando conta..." : "Criar conta"}
             </Button>
             <div className="flex items-center justify-between w-full">
               <Button variant="ghost" size="sm" asChild>
-                <Link href="/">
+                <Link href="/welcome">
                   <ArrowLeft className="mr-2 h-4 w-4" />
                   Voltar
                 </Link>
               </Button>
-              <Link href="/register" className="text-sm text-primary hover:underline">
-                Não tem uma conta? Cadastre-se
+              <Link href="/login" className="text-sm text-primary hover:underline">
+                Já tem uma conta? Entrar
               </Link>
             </div>
           </CardFooter>

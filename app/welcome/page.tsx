@@ -3,7 +3,7 @@ import { Trophy, LogIn, UserPlus } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 
-export default function Home() {
+export default function WelcomePage() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-muted/40 p-4">
       <div className="w-full max-w-4xl">

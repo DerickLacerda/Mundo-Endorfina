@@ -1,10 +1,10 @@
 import type React from "react"
-import type { Metadata } from "next/dist/lib/metadata/types/metadata-interface"
+import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import "./globals.css"
 import { Toaster } from "sonner"
 import { ThemeProvider } from "@/components/theme-provider"
-import { Sidebar } from "@/components/sidebar"
+import { AuthProvider } from "@/contexts/auth-context"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -15,19 +15,18 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode
-}>) {
+}) {
   return (
     <html lang="pt-BR" suppressHydrationWarning>
       <body className={inter.className}>
-              <ThemeProvider defaultTheme="light" enableSystem={false} disableTransitionOnChange>
-          <div className="flex min-h-screen">
-            <Sidebar />
-            <main className="flex-1 bg-background">{children}</main>
-          </div>
-          <Toaster position="top-right" />
-        </ThemeProvider>
+        <AuthProvider>
+          <ThemeProvider defaultTheme="light" enableSystem={false} disableTransitionOnChange>
+            {children}
+            <Toaster position="top-right" />
+          </ThemeProvider>
+        </AuthProvider>
       </body>
     </html>
   )

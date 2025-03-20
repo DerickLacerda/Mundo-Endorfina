@@ -40,7 +40,7 @@ export function UserRanking() {
             <span className="text-xs text-muted-foreground">{user.points} pontos</span>
           </div>
           {user.position === 10 && (
-            <Badge variant="primary" className="ml-auto">
+            <Badge variant="secondary" className="ml-auto">
               Você
             </Badge>
           )}

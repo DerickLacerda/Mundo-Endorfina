@@ -147,10 +147,10 @@ export default function RankingPage() {
                     <span className="text-xs text-muted-foreground">{user.runs} corridas</span>
                   </div>
                   {user.position === 10 && (
-                   <Badge variant="secondary" className="ml-auto md:ml-4">
-                   Você
-                 </Badge>
-                    )}
+                    <Badge variant="secondary" className="ml-auto md:ml-4">
+                      Você
+                    </Badge>
+                  )}
                 </div>
               ))}
             </div>
