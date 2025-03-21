@@ -3,6 +3,7 @@ const nextConfig = {
   reactStrictMode: true,
   transpilePackages: [
     "lucide-react",
+    "embla-carousel-react",
     "@radix-ui/react-accordion",
     "@radix-ui/react-alert-dialog",
     "@radix-ui/react-aspect-ratio",
