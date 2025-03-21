@@ -9,20 +9,18 @@ import { useAuth } from "@/contexts/auth-context"
 
 export default function AuthenticatedLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode
-}>) {
+}) {
   const { user, isLoading } = useAuth()
   const router = useRouter()
 
   useEffect(() => {
-    // Só redireciona quando o carregamento inicial terminar
     if (!isLoading && !user) {
       router.push("/welcome")
     }
   }, [user, isLoading, router])
 
-  // Se estiver carregando ou o usuário não estiver logado, mostra tela de carregamento
   if (isLoading || !user) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -34,7 +32,6 @@ export default function AuthenticatedLayout({
     )
   }
 
-  // Se o usuário estiver logado, mostra o layout com sidebar
   return (
     <div className="flex min-h-screen">
       <Sidebar />
